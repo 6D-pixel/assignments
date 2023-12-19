@@ -1,18 +1,17 @@
-const fs = require('fs')
+const fs = require("fs");
 
-let content='';
+let content;
 
-fs.readFile('./a.txt','utf-8',(err,data)=>{
-    if(err){
-        console.log(err)
-        return
+fs.readFile("a1.txt", "utf-8", (err, data) => {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  content = data.replace(/\s+/g, " ").trim();
+  fs.writeFile("a1.txt", content, (err) => {
+    if (err) {
+      console.error(err);
     }
-    content = data.replace(/\s+/g, ' ').trim();
-})
-
-fs.writeFile('./a.txt',content, err=>{
-    if(err){
-        console.error(err)
-    }
-    console.log(content)
-})
+    console.log(content);
+  });
+});
