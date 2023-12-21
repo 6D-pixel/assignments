@@ -39,11 +39,61 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+let todo = []; //it , title, description
+
+app.use(bodyParser.json());
+
+app.get("/todos", (req, res) => {
+  res.status(200).json(todo);
+});
+
+app.get("/todos/:it", (req, res) => {
+  const todos = todo.find((val) => val.id === parseInt(req.params.id));
+  if (!todos) {
+    res.status(404).send();
+  } else {
+    res.json(todos);
+  }
+});
+
+app.post("/todos", (req, res) => {
+  const newTodo = {
+    id: Math.floor(Math.random() * 1000000),
+    title: req.body.title,
+    description: req.body.description,
+  };
+  todo.push(newTodo);
+  res.status(201).json(newTodo);
+});
+
+app.put("/todos/:id", (req, res) => {
+  const todoIndex = todo.findIndex((val) => val.id === parseInt(req.params.id));
+  if (todoIndex === -1) {
+    res.status(404).send("Todo not found");
+  } else {
+    todo[todoIndex].title = req.body.title;
+    todo[todoIndex].description = req.body.description;
+    res.json(todo[todoIndex]);
+  }
+});
+
+app.delete("/todos/:id", (req, res) => {
+  const todoIndex = todo.findIndex((val) => val.id === parseInt(req.params.id));
+  if (todoIndex === -1) {
+    res.status(404).send("Todo not found");
+  } else {
+    todo.splice(todoIndex, 1);
+    res.status(200).send("done");
+  }
+});
+
+// for all other routes, return 404
+app.use(function (req, res, next) {
+  res.status(404).send("Not found");
+});
+module.exports = app;

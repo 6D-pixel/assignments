@@ -46,7 +46,7 @@
   });
   
   app.get('/todos/:id', (req, res) => {
-    const todo = todos.find(t => t.id === parseInt(req.params.id));
+    let todo = todos.find(t => t.id === parseInt(req.params.id));
     if (!todo) {
       res.status(404).send();
     } else {
